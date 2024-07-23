@@ -20,7 +20,8 @@ struct node *start = NULL;
 
 int main() {
   int choice, pos;
-  while (1) {
+  while (1) 
+  {
     printf("\n                MENU                             \n");
     printf("\n 1.Create     \n");
     printf("\n 2.Display    \n");
@@ -35,7 +36,8 @@ int main() {
     printf("\nEnter your choice:\t");
     scanf("%d", &choice);
 
-    switch (choice) {
+    switch (choice) 
+    {
       case 1:
         create();
         break;
@@ -75,20 +77,25 @@ int main() {
   return 0;
 }
 
-void create() {
+void create() 
+{
   struct node *temp = (struct node *)malloc(sizeof(struct node));
-  if (temp == NULL) {
+  if (temp == NULL) 
+  {
     printf("\nOut of Memory Space:\n");
     exit(0);
   }
   printf("\nEnter the data value for the node:\t");
   scanf("%d", &temp->info);
   temp->next = NULL;
-  if (start == NULL) {
+  if (start == NULL)
+  {
     start = temp;
-  } else {
+  } else 
+  {
     struct node *ptr = start;
-    while (ptr->next != NULL) {
+    while (ptr->next != NULL) 
+    {
       ptr = ptr->next;
     }
     ptr->next = temp;
