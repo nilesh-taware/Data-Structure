@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node
+{
+    int val;
+    struct Node *prev;
+    struct Node *next;
+};
+
+typedef struct Node N;
+N *start = NULL, *tmp, *ptr;
+
+void CreateList()
+{
+    tmp = (N *)malloc(sizeof(N));
+    printf("Enter value : ");
+    scanf("%d", &tmp->val);
+    tmp->next = NULL;
+    if (start == NULL)
+    {
+        ptr = tmp;
+        start = tmp;
+        tmp->prev = NULL;
+    }
+    else
+    {
+        ptr->next = tmp;
+        tmp->prev = ptr;
+        ptr = tmp;
+    }
+}
+
+void DisplayList()
+{
+    tmp = start;
+    while (tmp->next != NULL)
+    {
+        printf("%d -> ", tmp->val);
+        tmp = tmp->next;
+    }
+    while (tmp != NULL)
+    {
+        printf("%d <- ", tmp->val);
+        tmp = tmp->prev;
+    }
+}
+
+void InsertBeg()
+{
+    ptr = (N *)malloc(sizeof(N));
+    printf("Enter value : ");
+    scanf("%d",&ptr->val);
+    ptr->prev = NULL;
+    ptr->next = start;
+    tmp = start;
+    tmp->prev = ptr;
+}
+
+void InsertEnd()
+{
+    tmp = start;
+    while(tmp->next!=NULL)
+    {
+        tmp = tmp->next;
+    }
+    ptr = (N *)malloc(sizeof(N));
+    printf("Enter value : ");
+    scanf("%d",&ptr->val);
+    ptr->next = NULL;
+    ptr->prev = tmp;
+    tmp->next = ptr;
+}
