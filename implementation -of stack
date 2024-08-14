@@ -1,3 +1,6 @@
+//Linked list implimentation of stack
+
+
 #include <stdio.h>
 #include <stdlib.h>
  
