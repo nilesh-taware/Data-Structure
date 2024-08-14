@@ -1,0 +1,92 @@
+
+#include <stdio.h>
+
+//Function declarations
+void push();
+void pop();
+void peek();
+
+//stack array of size 20
+int stack[20],i,j,option=0,n,top=-1;
+int main ()
+{
+//  Size of stack
+    printf("Enter the number of elements in the stack\n");
+    scanf("%d",&n);
+    printf("Stack implementation using array\n");
+    
+//Taking user input for the operation to be performed
+    while(option != 4)
+    {
+        printf("Select your option...\n");
+        printf("\n1.Push\n2.Pop\n3.Peek\n4.Exit");
+        printf("\nEnter your option.\n");
+        scanf("%d",&option);
+        switch(option)
+        {
+            case 1:
+            {
+                push();
+                break;
+            }
+            case 2:
+            {
+                pop();
+                break;
+            }
+            case 3:
+            {
+                peek();
+                break;
+            }
+            case 4:
+            {
+                printf("Exiting...\n");
+                break;
+            }
+            default:
+            {
+                printf("\nPlease Enter valid option.?\n");
+            }
+        };
+    }
+}
+ 
+// Push operation function
+void push ()
+{
+    int value;
+    if (top == n )
+    printf("\n Stack Overflow..!");
+    else
+    {
+        printf("Enter the value?\n");
+        scanf("%d",&value);
+        top = top +1;
+        stack[top] = value;
+    }
+}
+
+// Pop operation function
+void pop ()
+{
+    if(top == -1)
+    printf("Stack Underflow..!\n");
+    else
+    top = top -1;
+}
+
+// peek operation function to retrive all elements
+void peek()
+{
+    for (i=top;i>=0;i--)
+    {
+        printf("%d\n",stack[i]);
+    }
+    if(top == -1)
+    {
+        printf("Stack is empty..!\n");
+    }
+}
+
+
