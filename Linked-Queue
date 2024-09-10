@@ -1,103 +1,105 @@
-#include<stdio.h>
-#include<stdlib.h>
-struct node
-{
-    int data;
-    struct node *next;
-};
-struct node *front;
-struct node *rear;
-void insert();
-void deleteq();
-void display();
-int main ()
-{
-    int choice;
-    while(choice != 4)
-    {
-        
-        printf("\n1.insert an element\n2.Delete an element\n3.Display the queue\n4.Exit\n");
-        printf("\nEnter your choice ?");
-        scanf("%d",& choice);
-        switch(choice)
-        {
-            case 1:
-            insert();
-            break;
-            case 2:
-            deleteq();
-            break;
-            case 3:
-            display();
-            break;
-            case 4:
-            exit(0);
-            break;
-            default:
-            printf("\nEnter valid choice??\n");
-        }
-    }
+#include <stdio.h>
+
+#define MAX_SIZE 5
+
+typedef struct {
+    int data[MAX_SIZE];
+    int front;
+    int rear;
+    int count;
+} CircularQueue;
+
+void initQueue(CircularQueue* q) {
+    q->front = 0;
+    q->rear = 0;
+    q->count = 0;
 }
-void insert()
-{
-    struct node *ptr;
-    int item;
-      
-    ptr = (struct node *) malloc (sizeof(struct node));
-    if(ptr == NULL)
-    {
-        printf("\nOVERFLOW\n");
+
+int isFull(CircularQueue* q) {
+    return q->count == MAX_SIZE;
+}
+
+int isEmpty(CircularQueue* q) {
+    return q->count == 0;
+}
+
+int enqueue(CircularQueue* q, int item) {
+    if (isFull(q)) {
+        printf("Queue is full\n");
+        return -1; // Error code
+    }
+    
+    q->data[q->rear] = item;
+    q->rear = (q->rear + 1) % MAX_SIZE;
+    q->count++;
+    
+    return 0; // Success
+}
+
+int dequeue(CircularQueue* q) {
+    if (isEmpty(q)) {
+        printf("Queue is empty\n");
+        return -1; // Error code
+    }
+    
+    int item = q->data[q->front];
+    q->data[q->front] = 0; // Clear the dequeued element
+    q->front = (q->front + 1) % MAX_SIZE;
+    q->count--;
+    
+    return item;
+}
+
+int peek(CircularQueue* q) {
+    if (isEmpty(q)) {
+        printf("Queue is empty\n");
+        return -1; // Error code
+    }
+    
+    return q->data[q->front];
+}
+
+void displayQueue(CircularQueue* q) {
+    if (isEmpty(q)) {
+        printf("Queue is empty\n");
         return;
     }
-    else
-    {
-        printf("\nEnter value?\n");
-        scanf("%d",&item);
-        ptr -> data = item;
-        if(front == NULL)
-        {
-            front = ptr;
-            rear = ptr;
-            front -> next = NULL;
-            rear -> next = NULL;
-        }
-        else
-        {
-            rear -> next = ptr;
-            rear = ptr;
-            rear->next = NULL;
-        }
-    }
+
+    int i = q->front;
+    do {
+        printf("%d ", q->data[i]);
+        i = (i + 1) % MAX_SIZE;
+    } while (i != q->rear);
+    printf("\n");
 }
-void deleteq ()
-{
-    struct node *ptr;
-    if(front == NULL)
-    {
-        printf("\nUNDERFLOW\n");
-        return;
-    }
-    else
-    {
-        ptr = front;
-        front = front -> next;
-        free(ptr);
-    }
-}
-void display()
-{
-    struct node *ptr;
-    ptr = front;
-    if(front == NULL)
-    {
-        printf("\nEmpty queue\n");
-    }
-    else
-    {   printf("\nprinting values .....\n");
-        while(ptr != NULL)
-        {
-            printf("\n%d\n",ptr -> data);
-            ptr = ptr -> next;
-        }
-    }
+
+int main() {
+    CircularQueue q;
+    initQueue(&q);
+
+    // Enqueue operations
+    enqueue(&q, 1);
+    enqueue(&q, 2);
+    enqueue(&q, 3);
+    enqueue(&q, 4);
+    enqueue(&q, 5);
+
+    printf("Queue after enqueuing: ");
+    displayQueue(&q);
+
+    // Dequeue operation
+    int dequeuedItem = dequeue(&q);
+    printf("Dequeued item: %d\n", dequeuedItem);
+
+    printf("Queue after dequeuing: ");
+    displayQueue(&q);
+
+    // Peek operation
+    int peekedItem = peek(&q);
+    printf("Peeked item: %d\n", peekedItem);
+
+    // Attempt to enqueue when full
+    enqueue(&q, 6); // This should fail
+
+    return 0;
 }
