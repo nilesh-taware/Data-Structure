@@ -1,0 +1,114 @@
+#include <stdio.h>
+
+#define MAX_SIZE 5
+
+typedef struct {
+    int data[MAX_SIZE];
+    int front;
+    int rear;
+    int count;
+}
+CircularQueue;
+
+// Function to initialize the queue
+void initQueue(CircularQueue * q) {
+    q -> front = 0;
+    q -> rear = 0;
+    q -> count = 0;
+}
+
+// Function to check if the queue is full
+int isFull(CircularQueue * q) {
+    return q -> count == MAX_SIZE;
+}
+
+// Function to check if the queue is empty
+int isEmpty(CircularQueue * q) {
+    return q -> count == 0;
+}
+
+// Function to add an element to the queue
+void enqueue(CircularQueue * q, int item) {
+    if (isFull(q)) {
+        printf("Queue is full. Cannot enqueue.\n");
+        return;
+    }
+
+    q -> data[q -> rear] = item;
+    q -> rear = (q -> rear + 1) % MAX_SIZE;
+    q -> count++;
+
+    printf("%d has been enqueued.\n", item);
+}
+
+// Function to remove an element from the queue
+int dequeue(CircularQueue * q) {
+    if (isEmpty(q)) {
+        printf("Queue is empty. Cannot dequeue.\n");
+        return -1; // Return -1 to indicate failure
+    }
+
+    int item = q -> data[q -> front];
+    q -> data[q -> front] = 0; // Clear the dequeued element
+    q -> front = (q -> front + 1) % MAX_SIZE;
+    q -> count--;
+
+    printf("%d has been dequeued.\n", item);
+    return item;
+}
+
+// Function to display the contents of the queue
+void displayQueue(CircularQueue * q) {
+    if (isEmpty(q)) {
+        printf("Queue is empty.\n");
+        return;
+    }
+
+    printf("Queue contents: ");
+    int i = q -> front;
+    do {
+        printf("%d ", q -> data[i]);
+        i = (i + 1) % MAX_SIZE;
+    } while (i != q -> rear);
+    printf("\n");
+}
+
+// Main function to demonstrate the usage of circular queue
+int main() {
+    CircularQueue q;
+    initQueue( & q);
+
+    printf("Circular Queue Operations:\n");
+    printf("1. Enqueue\n");
+    printf("2. Dequeue\n");
+    printf("3. Display\n");
+    printf("4. Exit\n");
+
+    int choice, item;
+
+    while (1) {
+        printf("\nEnter your choice: ");
+        scanf("%d", & choice);
+
+        switch (choice) {
+        case 1:
+            printf("Enter element to enqueue: ");
+            scanf("%d", & item);
+            enqueue( & q, item);
+            break;
+        case 2:
+            dequeue( & q);
+            break;
+        case 3:
+            displayQueue( & q);
+            break;
+        case 4:
+            printf("Exiting...\n");
+            return 0;
+        default:
+            printf("Invalid choice. Please choose again.\n");
+        }
+    }
+
+    return 0;
+}
