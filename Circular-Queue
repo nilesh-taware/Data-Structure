@@ -1,106 +1,127 @@
 #include <stdio.h>
+#define MAX_SIZE 5 // Define the maximum size of the Circular Queue
 
-#define MAX_SIZE 5
-
+// Circular Queue structure definition
 typedef struct {
-   int data[MAX_SIZE];
-   int front;
-   int rear;
-   int count;
-}
-CircularQueue;
+    int data[MAX_SIZE];
+    int front;
+    int rear;
+    int count;
+} CircularQueue;
 
-void initQueue(CircularQueue * q) {
-   q -> front = 0;
-   q -> rear = 0;
-   q -> count = 0;
-}
-
-int isFull(CircularQueue * q) {
-   return q -> count == MAX_SIZE;
+// Initialize the Circular Queue
+void initQueue(CircularQueue* q) {
+    q->front = 0;
+    q->rear = 0;
+    q->count = 0;
 }
 
-int isEmpty(CircularQueue * q) {
-   return q -> count == 0;
+// Check if the queue is full
+int isFull(CircularQueue* q) {
+    return q->count == MAX_SIZE;
 }
 
-int enqueue(CircularQueue * q, int item) {
-   if (isFull(q)) {
-      printf("Queue is full\n");
-      return -1; // Error code
-   }
-
-   q -> data[q -> rear] = item;
-   q -> rear = (q -> rear + 1) % MAX_SIZE;
-   q -> count++;
-
-   return 0; // Success
+// Check if the queue is empty
+int isEmpty(CircularQueue* q) {
+    return q->count == 0;
 }
 
-int dequeue(CircularQueue * q) {
-   if (isEmpty(q)) {
-      printf("Queue is empty\n");
-      return -1; // Error code
-   }
+// Enqueue an element to the queue
+int enqueue(CircularQueue* q, int item) {
+    if (isFull(q)) {
+        printf("Queue is full\n");
+        return -1; // Error code indicating full queue
+    }
 
-   int item = q -> data[q -> front];
-   q -> data[q -> front] = 0; // Clear the dequeued element
-   q -> front = (q -> front + 1) % MAX_SIZE;
-   q -> count--;
+    q->data[q->rear] = item;              // Add item to the rear of the queue
+    q->rear = (q->rear + 1) % MAX_SIZE;    // Move rear pointer in a circular manner
+    q->count++;                            // Increase the item count
 
-   return item;
+    return 0; // Success
 }
 
-int peek(CircularQueue * q) {
-   if (isEmpty(q)) {
-      printf("Queue is empty\n");
-      return -1; // Error code
-   }
+// Dequeue an element from the queue
+int dequeue(CircularQueue* q) {
+    if (isEmpty(q)) {
+        printf("Queue is empty\n");
+        return -1; // Error code indicating empty queue
+    }
 
-   return q -> data[q -> front];
+    int item = q->data[q->front];           // Get the item at the front of the queue
+    q->front = (q->front + 1) % MAX_SIZE;   // Move front pointer in a circular manner
+    q->count--;                             // Decrease the item count
+
+    return item; // Return dequeued item
 }
 
-void displayQueue(CircularQueue * q) {
-   if (isEmpty(q)) {
-      printf("Queue is empty\n");
-      return;
-   }
+// Peek at the front element without removing it
+int peek(CircularQueue* q) {
+    if (isEmpty(q)) {
+        printf("Queue is empty\n");
+        return -1; // Error code indicating empty queue
+    }
 
-   int i = q -> front;
-   do {
-      printf("%d ", q -> data[i]);
-      i = (i + 1) % MAX_SIZE;
-   } while (i != q -> rear);
-   printf("\n");
+    return q->data[q->front]; // Return the front element
 }
 
+// Display the queue contents
+void displayQueue(CircularQueue* q) {
+    if (isEmpty(q)) {
+        printf("Queue is empty\n");
+        return;
+    }
+
+    int i = q->front;
+    printf("Queue contents: ");
+    do {
+        printf("%d ", q->data[i]);           // Print each element
+        i = (i + 1) % MAX_SIZE;              // Move index in circular manner
+    } while (i != q->rear);                  // Stop when we reach the rear
+    printf("\n");
+}
+
+// Main function to demonstrate the Circular Queue operations
 int main() {
-   CircularQueue q;
-   initQueue( & q);
+    CircularQueue q;
+    initQueue(&q);
 
-   // Enqueue operations
-   enqueue( & q, 1);
-   enqueue( & q, 2);
-   enqueue( & q, 3);
-   enqueue( & q, 4);
-   enqueue( & q, 5);
+    // Enqueue operations
+    enqueue(&q, 1);
+    enqueue(&q, 2);
+    enqueue(&q, 3);
+    enqueue(&q, 4);
+    enqueue(&q, 5);  // Queue becomes full here
 
-   printf("Queue after enqueuing: ");
-   displayQueue( & q);
+    // Display the queue after enqueuing
+    printf("Queue after enqueuing: ");
+    displayQueue(&q);
 
-   // Dequeue operation
-   int dequeuedItem = dequeue( & q);
-   printf("Dequeued item: %d\n", dequeuedItem);
+    // Dequeue operation
+    int dequeuedItem = dequeue(&q);
+    printf("Dequeued item: %d\n", dequeuedItem);
 
-   printf("Queue after dequeuing: ");
-   displayQueue( & q);
+    // Display the queue after dequeuing
+    printf("Queue after dequeuing: ");
+    displayQueue(&q);
 
-   // Peek operation
-   int peekedItem = peek( & q);
-   printf("Peeked item: %d\n", peekedItem);
+    // Peek operation
+    int peekedItem = peek(&q);
+    printf("Peeked item: %d\n", peekedItem);
 
-   // Attempt to enqueue when full
-   enqueue( & q, 6); // This should fail
+    // Attempt to enqueue when the queue is full (should fail)
+    int enqueueResult = enqueue(&q, 6); // This should fail because the queue is full
+    if (enqueueResult == -1) {
+        printf("Enqueue failed: Queue is full\n");
+    }
 
-   return 0;
+    // Dequeue remaining elements to test circular behavior
+    dequeue(&q);
+    dequeue(&q);
+    dequeue(&q);
+    dequeue(&q); // Queue becomes empty here
+
+    printf("Queue after multiple dequeues: ");
+    displayQueue(&q);
+
+    return 0;
 }
